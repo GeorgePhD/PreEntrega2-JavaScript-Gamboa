@@ -25,21 +25,22 @@ const categories = ['electronics', "women's clothing"];
 //filtering the categories
 function filteringByCategory() {
 
-    const filteredProducts = productsData.filter( product => categories.includes(product.category));
-    //console.log(filteredProducts);
+    const filteredProducts = productsData.filter(product => categories.includes(product.category));
+    console.log(filteredProducts);
 
     return filteredProducts;
 
 };
 filteringByCategory();
 
-// 2) Mediante un alert, saludar al usuario y darles la bienvenida a su ecommerce.
-const askingUser = () => {
 
-    alert('bienvenido a nuestra tienda online');
+// 2) Mediante un alert, saludar al usuario y darles la bienvenida a su ecommerce.
+const welcomeUser = () => {
+
+    alert('bienvenido a nuestra tienda online, esperamos poder ayudarte en tu compra!');
 
 };
-askingUser();
+welcomeUser();
 
 // 3) Mediante un alert, visualizar las categorías de productos disponibles.
 function showingCategories() {
@@ -54,69 +55,103 @@ const validatingInput = () => {
 
     let validCategory = false;
 
-    while(!validCategory) {
+    while (!validCategory) {
 
-        const category = prompt('ingrese el numero de la categoría');
+        const category = prompt('ingresa el número de la categoría');
 
         switch (category) {
 
             case '1':
-                alert(`esta es la categoría 1 : ${categories[0]} : ${categories[0]}`);
+                alert(`esta es la categoría 1 : ${categories[0]}`);
+
                 validCategory = true;
                 break;
-            
+
             case '2':
-                alert(`esta es la categoría 2 : ${categories[1]} : ${categories[1]}`)
+                alert(`esta es la categoría 2 : ${categories[1]}`);
+
                 validCategory = true;
                 break;
-    
-            default: 
-            alert('invalid information. Please enter 1 or 2 to see the categories');
-            //break;
+
+            default:
+                alert('invalid information. Please enter 1 or 2 to see the categories');
+
         }
-            //return;
+
     }
+
 };
 validatingInput();
 
 // 4) Mediante un prompt, mostrar la lista de productos disponibles ordenados de manera A-Z y preguntar qué producto quiere comprar.
+// Modify your existing code as follows:
+
 //display the products in a prompt
 function displayingOrderedProducts() {
 
-    const cards_container = document.querySelector('#cards-container');
-    cards_container.classList.add('cards-container');
-    
-        const sortedProducts = [...productsData];
+    //making a copy of the array using the spread operator
+    const sortedProducts = [...productsData];
 
-        sortedProducts.sort( (a ,b) => { 
+    //returning productsData sorted alphabetically
+    sortedProducts.sort((a, b) => {
 
-            return a.title.localeCompare(b.title);
+        return a.title.localeCompare(b.title);
 
     });
 
-    for(const product of products) {
+    //create a empty string to store the list of products
+    let productsList = '';
 
-        console.log(`name : ${product.title}, Category: ${product.category}`);
 
-       // for(const product of products) {
 
-            cards_container.innerHTML += `
+    //looping through the array sortedProducts using for of.
+    for (const product of sortedProducts) {
+        //append each product to the list
+        productsList += `Id: ${product.id}, Name : ${product.title}, Category: ${product.category}\n`;
+
+        console.log(`Id: ${product.id}, Name : ${product.title}, Category: ${product.category}\n`);
+    };
+
+    //display the list in a prompt
+    const userBuy = confirm(`qué producto quieres comprar? "INGRESA SOLO EL ID DEL PRODUCTO"' , ${productsList}`);
+
+    if (userBuy) {
+
+        let productFound = false;
+
+        while(!productFound) {
             
-                <div class='card-container'>
+            const productId = prompt('Ingresa el ID del producto que quieras comprar');
 
-                <h2> Title : ${product.title}</h2> 
-                <h2> Category: ${product.category}</h2> 
-                <img class='card-container--img' src='${product.image}'> 
-                <p class='card-container--p'> Price: ${product.price}</p> 
-                
-                </div>
-        
-        `}
+            for (const product of sortedProducts) {
 
-        
-   // }
+                if (product.id === parseInt(productId)) {
+    
+                    alert(`Id : ${product.id} \n Name : ${product.title}`);
+                    productFound = true;
+                    break;
+                }
+            }
+
+            if (!productFound) {
+                alert('Id no encontrado, Ingresa un Id válido.');
+            }
+
+        }
+
+    } else {
+
+        alert('Gracias por tu visita.')
+
+    };
 };
+//calling the function
 displayingOrderedProducts();
+
+
+
+
+
 
 // 5) Con el valor obtenido del punto 4, se deberá buscar el producto deseado y mediante un confirm, mostrar el nombre, descripción y precio del producto. Se deberá preguntar al usuario si se desea completar la compra. En caso de que no se encuentre el producto, se deberá dar la chance de ingresarlo nuevamente.
 
