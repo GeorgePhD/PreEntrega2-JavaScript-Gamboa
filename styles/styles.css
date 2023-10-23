@@ -1,5 +1,5 @@
 
-h2 {
+/* h2 {
     font-size: 15px;
 }
 .cards-container {
@@ -17,7 +17,7 @@ h2 {
     background-color: rgb(255, 255, 255);
     box-shadow: 3px 3px 10px black;
     max-height: 450px;
-    /* overflow: auto; */
+    overflow: auto;
 }
 .card-container--img {
     width: 100%;
@@ -26,7 +26,7 @@ h2 {
 .card-container--p {
     font-size: 17px;
     font-weight: bold;
-}
+} */
 
 
 
