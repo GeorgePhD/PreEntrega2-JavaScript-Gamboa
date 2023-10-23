@@ -1,170 +1,131 @@
-//import product data
 import products from './products.js';
 
-//adding the products list to a variable
-const productsData = products;
 
-//checking whether it works
-//console.log(productsData[10].category);
+//storing categories in variables
+const electronicsCategory = 'electronics';
+const mensClothingCategory = "men's clothing";
 
-
-
-// ESTOS PUNTOS DE TAREA COMPRENDEN TODO LO VISTO DURANTE LAS CLASE 1, 2, 3, 4, 5, 6 ,7, 8
-// EL SEGUNDO DESAFÍO COMPRENDE: VARIABLES, CONDICIONALES, BUCLES, FUNCIONES, OBJETOS, ARRAYS Y FUNCIONES DE ORDEN SUPERIOR
-// ESO SIGNIFICA QUE TODO EJERCICIO QUE CONTENGA MÉTODOS O DATOS QUE NO FUERON VISTOS EN CLASES, NO SERÁN EVALUADOS
-// ESO SIGNIFICA QUE DEBEN INCLUIR TODO LO VISTO HASTA LA CLASE 8
-
-// CASO ECOMMERCE
-// DENTRO DE LA CARPETA DATA, HAY UN ARCHIVO products.js QUE PODEMOS UTILIZAR PARA EL DESARROLLO DE NUESTRA PREENTREGA
-
+//filtering categories from products list
 // 1) Tomar dos categorías de productos que deseen incorporar en su tienda y filtrar de entre todos los productos aquellos que cumplan con la categoría.
 
-//adding two categories to a variable
-const categories = ['electronics', "women's clothing"];
+//storing the filtered products in a variable
+const filteredElectronics = products.filter(product => product.category === electronicsCategory);
+console.log(filteredElectronics);
 
-//filtering the categories
-function filteringByCategory() {
-
-    const filteredProducts = productsData.filter(product => categories.includes(product.category));
-    console.log(filteredProducts);
-
-    return filteredProducts;
-
-};
-filteringByCategory();
-
+const filteredMensClothing = products.filter(product => product.category === mensClothingCategory);
+console.log(filteredMensClothing);
 
 // 2) Mediante un alert, saludar al usuario y darles la bienvenida a su ecommerce.
-const welcomeUser = () => {
+//welcoming the user function
+function welcomingUser() {
 
-    alert('bienvenido a nuestra tienda online, esperamos poder ayudarte en tu compra!');
-
+    const userName = prompt('ingresa tu nombre')
+    
+    alert(`bienvenido a nuestra tienda online ${userName}, te ayudaremos con tu compra.`);
 };
-welcomeUser();
+welcomingUser();
 
 // 3) Mediante un alert, visualizar las categorías de productos disponibles.
-function showingCategories() {
+//showing the user the categories
+const displayCategories = () => {
 
-    alert(`estas son nuestras categorías disponibles: 1. ${categories[0]} and 2. ${categories[1]}`);
-
+    alert(`estas son las categorías disponibles : ${electronicsCategory} y ${mensClothingCategory}, a continuación deberás seleccionar una.`);
 };
-showingCategories();
+displayCategories();
 
-//validating input from user / validando el input del usuario
-const validatingInput = () => {
+//user must select one category and all products from that will be shown in an alert, it must be validated that user enters correct information.
+//asking the user to select a category
+function selectOneCategory() {
 
-    let validCategory = false;
 
-    while (!validCategory) {
+    while (true) {
 
-        const category = prompt('ingresa el número de la categoría');
+        const categoryInput = prompt(`Ingresa la categoría (${electronicsCategory} o ${mensClothingCategory}), recuerda escribir la información de forma perfecta como se muestra en la descripción`);
 
-        switch (category) {
+        //if the user clicks on cancel button, it shows the first alert.
+        if (categoryInput === null) {
 
-            case '1':
-                alert(`esta es la categoría 1 : ${categories[0]}`);
+            alert('Operación cancelada por el usuario.');
+            break;
+            //checking that if the user input (prompt information) is equal to the categories.
+        } else if (categoryInput === electronicsCategory || categoryInput === mensClothingCategory) {
 
-                validCategory = true;
-                break;
+            const selectedCategory = categoryInput;
 
-            case '2':
-                alert(`esta es la categoría 2 : ${categories[1]}`);
+            const filteredProducts = products.filter(product => product.category === selectedCategory);
 
-                validCategory = true;
-                break;
+            //ordering products alphabetically
+            displayProductsAlphabetically(filteredProducts);
+            
+            break;
 
-            default:
-                alert('invalid information. Please enter 1 or 2 to see the categories');
+        } else {
 
+            alert('Categoría no válida. Por favor, ingresa una categoría válida.');
         }
+    }
+};
+selectOneCategory();
 
+// Separate function to prompt the user to select a product by ID and validate it
+
+// 4) Mediante un prompt, mostrar la lista de productos disponibles ordenados de manera A-Z y preguntar qué producto quiere comprar.
+// Separate function to display products ordered alphabetically by title
+function displayProductsAlphabetically(products) {
+
+    const sortedProducts = products.slice().sort((a, b) => a.title.localeCompare(b.title));
+    const productInfo = sortedProducts.map(product => `Id:${product.id}: = ${product.title}`).join('\n');
+    
+    alert(`Productos ordenados alfabéticamente:\n ${productInfo}`);
+};
+
+// 5) Con el valor obtenido del punto 4, se deberá buscar el producto deseado y mediante un confirm, mostrar el nombre, descripción y precio del producto. Se deberá preguntar al usuario si se desea completar la compra. En caso de que no se encuentre el producto, se deberá dar la chance de ingresarlo nuevamente.
+// 6) Con el valor obtenido del punto 5), se deberá visualizar un alert que agradezca la compra con una supuesta fecha de entrega -usando date-, en el caso de que la acepte, si la cancela, se agradecerá la interacción.
+
+// Separate function to confirm the purchase of a desired product
+const confirmPurchase = () => {
+    const sortedProducts = products.slice().sort((a, b) => a.title.localeCompare(b.title));
+    const productInfo = sortedProducts.map(product => `${product.title} ${product.id}`).join('\n');
+
+    const userConfirmation = prompt('ingresa el ID del producto que quieres comprar.');
+    
+    if(userConfirmation) {
+        
+        const selectedProduct = products.find(product => product.id === parseInt(userConfirmation, 10));
+
+        if(selectedProduct) {
+
+            const {id, title, price} = selectedProduct;
+            const confirmation = confirm(`Estás de acuerdo en comprar el producto con ID: ${id}, Title: ${title}, Price: ${price}?\n\nProductos disponibles en ambas categorías:\n${productInfo}`);
+
+            if(confirmation) {
+
+                const today = new Date();
+                const deliveryTime = new Date(today);
+                deliveryTime.setDate(today.getDate() + 3);
+                const formattedDeliveryTime = deliveryTime.toLocaleDateString()
+                alert(`Compra exitosa!, has comprado el item con id : ${id}, nombre : ${title}.\n\n Fecha de entrega estimada : ${formattedDeliveryTime}\n\n Gracias por tu compra.`);
+
+            } else {
+
+                alert('Compra cancelada por el usuario, esperamos verte pronto.');
+            }
+
+        } else {
+
+            alert('ID inválido, ingresa un ID correcto.');
+        }
+        
     }
 
 };
-validatingInput();
-
-// 4) Mediante un prompt, mostrar la lista de productos disponibles ordenados de manera A-Z y preguntar qué producto quiere comprar.
-// Modify your existing code as follows:
-
-//display the products in a prompt
-function displayingOrderedProducts() {
-
-    //making a copy of the array using the spread operator
-    const sortedProducts = [...productsData];
-
-    //returning productsData sorted alphabetically
-    sortedProducts.sort((a, b) => {
-
-        return a.title.localeCompare(b.title);
-
-    });
-
-    //create a empty string to store the list of products
-    let productsList = '';
-
-
-
-    //looping through the array sortedProducts using for of.
-    for (const product of sortedProducts) {
-        //append each product to the list
-        productsList += `Id: ${product.id}, Name : ${product.title}, Category: ${product.category}\n`;
-
-        console.log(`Id: ${product.id}, Name : ${product.title}, Category: ${product.category}\n`);
-    };
-
-    //display the list in a prompt
-    const userBuy = confirm(`qué producto quieres comprar? "INGRESA SOLO EL ID DEL PRODUCTO"' , ${productsList}`);
-
-    if (userBuy) {
-
-        let productFound = false;
-
-        while(!productFound) {
-            
-            const productId = prompt('Ingresa el ID del producto que quieras comprar');
-
-            for (const product of sortedProducts) {
-
-                if (product.id === parseInt(productId)) {
-    
-                    alert(`Id : ${product.id} \n Name : ${product.title}`);
-                    productFound = true;
-                    break;
-                }
-            }
-
-            if (!productFound) {
-                alert('Id no encontrado, Ingresa un Id válido.');
-            }
-
-        }
-
-    } else {
-
-        alert('Gracias por tu visita.')
-
-    };
-};
-//calling the function
-displayingOrderedProducts();
+confirmPurchase();
 
 
 
 
 
 
-// 5) Con el valor obtenido del punto 4, se deberá buscar el producto deseado y mediante un confirm, mostrar el nombre, descripción y precio del producto. Se deberá preguntar al usuario si se desea completar la compra. En caso de que no se encuentre el producto, se deberá dar la chance de ingresarlo nuevamente.
 
 
 
-
-
-// 6) Con el valor obtenido del punto 5), se deberá visualizar un alert que agradezca la compra con una supuesta fecha de entrega -usando date-, en el caso de que la acepte, si la cancela, se agradecerá la interacción.
-
-// CASO WEB INTERACTIVA
-// DENTRO DE LA CARPETA DATA, HAY UN ARCHIVO rickandmortycharacters.js QUE PODEMOS UTILIZAR PARA EL DESARROLLO DE NUESTRA PREENTREGA
-// 1) Mediante un alert, se deberá visualizar dar la bienvenida al sitio.
-// 2) Mediante un find y Math.random,se deberá visualizar en un alert la información de un personaje random.
-// 3) Se deberán ordenar los personajes de Z-A, y visualizar en un alert la información del primer personaje.
-// 4) Mediante un prompt, se deberá preguntarle al usuario sobre qué personaje quiere buscar y visualizar información.
-// 5)  Se deberá buscar y mediante un alert, mostrar la información del personaje ingresado. Si el valor no coincide, se deberá enviar un mensaje que indique que ese personaje no existe y darle la chance de que pueda volver a ingresarlo y ver la información.
