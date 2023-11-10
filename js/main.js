@@ -1,6 +1,7 @@
 import products from './products.js';
 
 
+
 //storing categories in variables
 const electronicsCategory = 'electronics';
 const mensClothingCategory = "men's clothing";
@@ -35,12 +36,14 @@ displayCategories();
 
 //user must select one category and all products from that will be shown in an alert, it must be validated that user enters correct information.
 //asking the user to select a category
+
+let categoryInput = '';
 function selectOneCategory() {
 
 
     while (true) {
 
-        const categoryInput = prompt(`Ingresa la categoría (${electronicsCategory} o ${mensClothingCategory}), recuerda escribir la información de forma perfecta como se muestra en la descripción`);
+        categoryInput = prompt(`Ingresa la categoría (${electronicsCategory} o ${mensClothingCategory}), recuerda escribir la información de forma perfecta como se muestra en la descripción`);
 
         //if the user clicks on cancel button, it shows the first alert.
         if (categoryInput === null) {
@@ -117,7 +120,11 @@ const confirmPurchase = () => {
         }
         
     }
+    if(categoryInput !== null && categoryInput !== ""){
 
+        confirmPurchase()
+    
+    };
 };
 confirmPurchase();
 
